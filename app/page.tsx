@@ -1,22 +1,25 @@
 import Container from "@/app/components/Container";
 import ListingCard from "@/app/components/listings/ListingCard";
+import CourseCard from "@/app/components/courses/CourseCard";
 import EmptyState from "@/app/components/EmptyState";
 
-import getListings, { 
-  IListingsParams
-} from "@/app/actions/getListings";
+import getCourses, { CoursesParams } from "@/app/actions/getCourses";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import ClientOnly from "./components/ClientOnly";
 
 interface HomeProps {
-  searchParams: IListingsParams
-};
+  searchParams: CoursesParams;
+}
 
 const Home = async ({ searchParams }: HomeProps) => {
-  const listings = await getListings(searchParams);
-  const currentUser = await getCurrentUser();
+  const courses = await getCourses(searchParams);
 
-  if (listings.length === 0) {
+  //ANTONIO
+  // const currentUser = await getCurrentUser();
+
+  console.log(courses, searchParams, "couses and searchParams");
+
+  if (courses.length === 0) {
     return (
       <ClientOnly>
         <EmptyState showReset />
@@ -27,7 +30,7 @@ const Home = async ({ searchParams }: HomeProps) => {
   return (
     <ClientOnly>
       <Container>
-        <div 
+        <div
           className="
             pt-24
             grid 
@@ -40,17 +43,22 @@ const Home = async ({ searchParams }: HomeProps) => {
             gap-8
           "
         >
-          {listings.map((listing: any) => (
-            <ListingCard
-              currentUser={currentUser}
-              key={listing.id}
-              data={listing}
-            />
-          ))}
+          {courses.map((course: any) => {
+            console.log(course, "course");
+            return (
+              // <ListingCard
+              //   currentUser={currentUser}
+              //   key={listing.id}
+              //   data={listing}
+              // />
+              <CourseCard key={course.id} title={course.title} />
+              // <div key={course.id}>{course.title}</div>
+            );
+          })}
         </div>
       </Container>
     </ClientOnly>
-  )
-}
+  );
+};
 
 export default Home;
